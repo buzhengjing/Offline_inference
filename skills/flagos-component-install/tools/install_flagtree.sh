@@ -57,7 +57,7 @@ get_default_wheel_version() {
         metax)      echo "0.5.1+metax3.0" ;;    # Triton 3.0, Python 3.10
         ascend)     echo "0.5.0+ascend3.2" ;;   # Triton 3.2, Python 3.11
         tsingmicro) echo "0.5.0rc1+tsingmicro3.3" ;; # Triton 3.3, Python 3.10
-        hcu)        echo "0.5.0+hcu3.0" ;;      # Triton 3.0, Python 3.10
+        hcu|hygon)  echo "0.5.0+hcu3.0" ;;      # Triton 3.0, Python 3.10
         enflame)    echo "0.4.0+enflame3.3" ;;  # Triton 3.3, Python 3.10
         sunrise)    echo "0.4.0+sunrise3.4" ;;  # Triton 3.4, Python 3.10
         *)          echo "" ;;                   # 无预编译包
@@ -70,7 +70,7 @@ get_default_wheel_version() {
 get_default_branch() {
     local vendor="$1"
     case "$vendor" in
-        nvidia|amd|iluvatar|mthreads|xpu|metax|hcu) echo "main" ;;       # Triton 3.0/3.1
+        nvidia|amd|iluvatar|mthreads|xpu|metax|hcu|hygon) echo "main" ;;  # Triton 3.0/3.1
         ascend|cambricon)                            echo "triton_v3.2.x" ;; # Triton 3.2
         tsingmicro|aipu|enflame-3.3)                 echo "triton_v3.3.x" ;; # Triton 3.3
         sunrise)                                     echo "triton_v3.4.x" ;; # Triton 3.4
@@ -91,7 +91,7 @@ get_backend_env() {
         mthreads)   echo "mthreads" ;;
         xpu)        echo "xpu" ;;
         metax)      echo "metax" ;;
-        hcu)        echo "hcu" ;;
+        hcu|hygon)  echo "hcu" ;;
         ascend)     echo "ascend" ;;
         cambricon)  echo "cambricon" ;;
         tsingmicro) echo "tsingmicro" ;;

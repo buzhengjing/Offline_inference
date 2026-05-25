@@ -129,6 +129,8 @@ docker exec $CONTAINER bash -c "PATH=/opt/conda/bin:\$PATH python3 /Offline_infe
 
 `--vendor` 根据 `gpu.vendor` 自动选择，支持：nvidia, iluvatar, mthreads, metax, ascend, tsingmicro, hcu, enflame, sunrise, amd, xpu。
 
+> **注意**：硬件厂商名与 FlagTree vendor 标识的映射：`hygon`(海光) → `hcu`。脚本已内置别名，传入 `hygon` 等同于 `hcu`。
+
 源码编译（无预编译包时）：
 ```bash
 docker exec $CONTAINER bash -c "PATH=/opt/conda/bin:\$PATH python3 /Offline_inference_workspace/scripts/install_component.py \
