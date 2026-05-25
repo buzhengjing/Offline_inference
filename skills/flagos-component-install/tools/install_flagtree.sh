@@ -52,12 +52,12 @@ get_default_wheel_version() {
         nvidia)     echo "0.5.0rc1" ;;         # Triton 3.6, Python 3.12
         nvidia-3.5) echo "0.5.0rc1+3.5" ;;     # Triton 3.5, Python 3.12
         nvidia-3.3) echo "0.4.0+3.3" ;;        # Triton 3.3, Python 3.10/3.11/3.12
-        iluvatar)   echo "0.4.0+iluvatar3.1" ;; # Triton 3.1, Python 3.10
-        mthreads)   echo "0.4.0+mthreads3.1" ;; # Triton 3.1, Python 3.10
-        metax)      echo "0.4.0rc1+metax3.1" ;; # Triton 3.1, Python 3.10
+        iluvatar)   echo "0.5.1+iluvatar3.1" ;; # Triton 3.1, Python 3.10
+        mthreads)   echo "0.5.1+mthreads3.1" ;; # Triton 3.1, Python 3.10
+        metax)      echo "0.5.1+metax3.0" ;;    # Triton 3.0, Python 3.10
         ascend)     echo "0.5.0+ascend3.2" ;;   # Triton 3.2, Python 3.11
         tsingmicro) echo "0.5.0rc1+tsingmicro3.3" ;; # Triton 3.3, Python 3.10
-        hcu)        echo "0.4.0+hcu3.0" ;;      # Triton 3.0, Python 3.10
+        hcu)        echo "0.5.0+hcu3.0" ;;      # Triton 3.0, Python 3.10
         enflame)    echo "0.4.0+enflame3.3" ;;  # Triton 3.3, Python 3.10
         sunrise)    echo "0.4.0+sunrise3.4" ;;  # Triton 3.4, Python 3.10
         *)          echo "" ;;                   # 无预编译包
@@ -127,12 +127,12 @@ case "$ACTION" in
         echo "  │ nvidia       │ 0.5.0rc1                      │ 3.6      │ 3.12   │"
         echo "  │ nvidia-3.5   │ 0.5.0rc1+3.5                  │ 3.5      │ 3.12   │"
         echo "  │ nvidia-3.3   │ 0.4.0+3.3                     │ 3.3      │ 3.10+  │"
-        echo "  │ iluvatar     │ 0.4.0+iluvatar3.1              │ 3.1      │ 3.10   │"
-        echo "  │ mthreads     │ 0.4.0+mthreads3.1              │ 3.1      │ 3.10   │"
-        echo "  │ metax        │ 0.4.0rc1+metax3.1              │ 3.1      │ 3.10   │"
+        echo "  │ iluvatar     │ 0.5.1+iluvatar3.1              │ 3.1      │ 3.10   │"
+        echo "  │ mthreads     │ 0.5.1+mthreads3.1              │ 3.1      │ 3.10   │"
+        echo "  │ metax        │ 0.5.1+metax3.0                 │ 3.0      │ 3.10   │"
         echo "  │ ascend       │ 0.5.0+ascend3.2                │ 3.2      │ 3.11   │"
         echo "  │ tsingmicro   │ 0.5.0rc1+tsingmicro3.3         │ 3.3      │ 3.10   │"
-        echo "  │ hcu          │ 0.4.0+hcu3.0                   │ 3.0      │ 3.10   │"
+        echo "  │ hcu          │ 0.5.0+hcu3.0                   │ 3.0      │ 3.10   │"
         echo "  │ enflame      │ 0.4.0+enflame3.3               │ 3.3      │ 3.10   │"
         echo "  │ sunrise      │ 0.4.0+sunrise3.4               │ 3.4      │ 3.10   │"
         echo "  └──────────────┴───────────────────────────────┴──────────┴────────┘"
