@@ -1,0 +1,113 @@
+network:
+  proxy: ''
+  pip_index: ''
+  confirmed: false
+execution:
+  mode: ''
+  cmd_prefix: ''
+model:
+  name: thaonguyen217/farm_molecular_representation
+  local_path: ''
+  container_path: /mnt/workspace/models/farm_molecular_representation
+  tokenizer_path: ''
+container:
+  name: farm_molecular_representation_offline_infer_0525_1013
+  status: running
+image:
+  name: harbor.baai.ac.cn/flagos-inner-models-release/flagrelease-farm-nvidia-tree_none-gems_none-vllm_none-plugin_none-python_3.12.3-torch_2.12.0.nv26.4-pcp_cuda13.2-gpu_nvidia003-arc_amd64-driver_570.133.20:202605201429
+  tag: ''
+gpu:
+  vendor: nvidia
+  count: 8
+  model: ''
+env_exploration:
+  inference_framework: transformers
+  framework_version: 5.8.1
+  python_version: 3.12.3
+  cuda_version: 13.2
+  model_format: safetensors
+  model_type: embedding
+  inference_mode: offline_native
+  custom_script_path: null
+  tokenizer_type: ''
+  key_dependencies: []
+  inference_entrypoint: transformers
+native_inference:
+  test_data_source: ''
+  test_data_path: ''
+  inference_cmd: ''
+  success: false
+  output_path: ''
+  error_log: ''
+  troubleshoot_attempts: 0
+  failure_reason: ''
+flaggems_inference:
+  flaggems_version: ''
+  flagtree_version: ''
+  inference_cmd: ''
+  success: false
+  output_path: ''
+  error_log: ''
+workflow:
+  native_inference_ok: false
+  native_released: false
+  flaggems_installed: false
+  flaggems_inference_ok: false
+  flaggems_released: false
+  all_done: false
+  terminated: false
+  termination_reason: ''
+workflow_ledger:
+  steps:
+  - step: 01_container_preparation
+    name: 容器准备
+    status: success
+    started_at: ''
+    finished_at: '2026-05-25T02:13:33'
+    fail_reason: ''
+  - step: 02_env_exploration
+    name: 环境探索
+    status: success
+    started_at: ''
+    finished_at: '2026-05-25T02:14:34'
+    fail_reason: ''
+  - step: 03_native_inference
+    name: 原生推理验证
+    status: pending
+    started_at: ''
+    finished_at: ''
+    fail_reason: ''
+  - step: 04_native_release
+    name: 原生镜像发布
+    status: pending
+    started_at: ''
+    finished_at: ''
+    fail_reason: ''
+  - step: 05_flaggems_install
+    name: FlagGems/FlagTree 安装
+    status: pending
+    started_at: ''
+    finished_at: ''
+    fail_reason: ''
+  - step: 06_flaggems_inference
+    name: FlagGems 推理验证
+    status: pending
+    started_at: ''
+    finished_at: ''
+    fail_reason: ''
+  - step: 07_flaggems_release
+    name: FlagGems 镜像发布
+    status: pending
+    started_at: ''
+    finished_at: ''
+    fail_reason: ''
+release:
+  native:
+    image_url: ''
+    readme_path: ''
+  flaggems:
+    image_url: ''
+    readme_path: ''
+metadata:
+  created_by: ''
+  updated_at: '2026-05-25T02:14:34'

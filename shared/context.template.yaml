@@ -1,0 +1,153 @@
+# ============================================================================
+# context.template.yaml — 离线推理验证流水线状态模板
+# ============================================================================
+# 由 setup_workspace.sh 复制到容器内 /Offline_inference_workspace/shared/context.yaml
+# 运行时各 Skill 通过 update_context.py 读写此文件传递状态
+# ============================================================================
+
+network:
+  proxy: ""
+  pip_index: ""
+  confirmed: false
+
+execution:
+  mode: ""                    # host | container
+  cmd_prefix: ""
+
+model:
+  name: ""
+  local_path: ""
+  container_path: ""
+  tokenizer_path: ""
+
+container:
+  name: ""
+  status: ""
+
+image:
+  name: ""
+  tag: ""
+
+gpu:
+  vendor: ""
+  count: 0
+  model: ""
+
+# ============================================================================
+# 环境探索结果（步骤2 env-exploration 写入）
+# ============================================================================
+env_exploration:
+  inference_framework: ""     # transformers / llama_cpp / custom_script
+  framework_version: ""
+  python_version: ""
+  cuda_version: ""
+  model_format: ""            # safetensors / bin / gguf
+  model_type: ""              # causal_lm / vlm / embedding / reranker
+  inference_mode: ""          # offline_native / custom_script
+  custom_script_path: ""      # 模型自带推理脚本路径（如有）
+  tokenizer_type: ""
+  key_dependencies: []        # [{name: xxx, version: xxx}]
+  inference_entrypoint: ""    # 推理入口命令/脚本路径
+
+# ============================================================================
+# 原生推理验证（步骤3 native-inference 写入）
+# ============================================================================
+native_inference:
+  test_data_source: ""        # official / constructed
+  test_data_path: ""
+  inference_cmd: ""
+  success: false
+  output_path: ""
+  error_log: ""
+  troubleshoot_attempts: 0
+  failure_reason: ""
+
+# ============================================================================
+# FlagGems 推理验证（步骤6 flaggems-inference 写入）
+# ============================================================================
+flaggems_inference:
+  flaggems_version: ""
+  flagtree_version: ""
+  inference_cmd: ""
+  success: false
+  output_path: ""
+  error_log: ""
+
+# ============================================================================
+# 工作流状态（编排层写入）
+# ============================================================================
+workflow:
+  native_inference_ok: false
+  native_released: false
+  flaggems_installed: false
+  flaggems_inference_ok: false
+  flaggems_released: false
+  all_done: false
+  terminated: false
+  termination_reason: ""
+
+# ============================================================================
+# 工作流台账
+# ============================================================================
+workflow_ledger:
+  steps:
+    - step: "01_container_preparation"
+      name: "容器准备"
+      status: "pending"
+      started_at: ""
+      finished_at: ""
+      fail_reason: ""
+    - step: "02_env_exploration"
+      name: "环境探索"
+      status: "pending"
+      started_at: ""
+      finished_at: ""
+      fail_reason: ""
+    - step: "03_native_inference"
+      name: "原生推理验证"
+      status: "pending"
+      started_at: ""
+      finished_at: ""
+      fail_reason: ""
+    - step: "04_native_release"
+      name: "原生镜像发布"
+      status: "pending"
+      started_at: ""
+      finished_at: ""
+      fail_reason: ""
+    - step: "05_flaggems_install"
+      name: "FlagGems/FlagTree 安装"
+      status: "pending"
+      started_at: ""
+      finished_at: ""
+      fail_reason: ""
+    - step: "06_flaggems_inference"
+      name: "FlagGems 推理验证"
+      status: "pending"
+      started_at: ""
+      finished_at: ""
+      fail_reason: ""
+    - step: "07_flaggems_release"
+      name: "FlagGems 镜像发布"
+      status: "pending"
+      started_at: ""
+      finished_at: ""
+      fail_reason: ""
+
+# ============================================================================
+# 发布信息
+# ============================================================================
+release:
+  native:
+    image_url: ""
+    readme_path: ""
+  flaggems:
+    image_url: ""
+    readme_path: ""
+
+# ============================================================================
+# 元数据
+# ============================================================================
+metadata:
+  created_by: ""
+  updated_at: ""
