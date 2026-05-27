@@ -1,6 +1,20 @@
-# Offline Inference 自动化框架 — 项目级指令
+# Offline Inference Workflow — 项目级指令
 
 > 此文件由 Claude Code 自动加载，提供 Skill 路由、工作流定义和自动决策规则。
+
+---
+
+## 项目结构
+
+本项目是离线推理验证的 **workflow 自动化框架**，基于状态机驱动 Claude 执行各阶段任务。
+
+```
+workflow/          — 核心 workflow 代码（状态机、节点、步骤、runner）
+skills/            — 各阶段的 Skill 定义和工具脚本（被 workflow 调用）
+tools/             — 辅助工具（extract_stream_text.py）
+tests/             — 测试代码
+docs/              — 文档
+```
 
 ---
 
@@ -28,10 +42,10 @@ ls .claude/settings.local.json 2>/dev/null && echo "EXISTS" || echo "MISSING —
 
 ---
 
-## 全自动流水线
+## Workflow 运行方式
 
 ```bash
-bash prompts/run_inference_pipeline.sh <镜像或容器> <模型名> <HARBOR_USER> <HARBOR_PASSWORD> [--model-path <路径>] [--verbose]
+python -m workflow.cli <镜像或容器> <模型名> <HARBOR_USER> <HARBOR_PASSWORD> [--model-path <路径>] [--verbose]
 ```
 
 流程总览见 `docs/SKILLS-OVERVIEW.md`。

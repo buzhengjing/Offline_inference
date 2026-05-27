@@ -1,0 +1,64 @@
+try:
+    import flag_gems
+    flag_gems.enable(record=True, once=True, unused=[], path="/root/gems.txt")
+except ImportError:
+    pass
+
+import argparse
+import json
+import torch
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
+
+{% for imp in extra_imports %}
+{{ imp }}
+{% endfor %}
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Reranker inference")
+    parser.add_argument("--model_path", type=str, default="{{ model_path }}")
+    parser.add_argument("--input_file", type=str, default="{{ input_file }}")
+    parser.add_argument("--output_file", type=str, default="{{ output_file }}")
+    parser.add_argument("--device", type=str, default="{{ device | default('cuda:0') }}")
+    parser.add_argument("--max_length", type=int, default={{ max_length | default(512) }})
+    return parser.parse_args()
+
+
+def main():
+    args = parse_args()
+
+    tokenizer = AutoTokenizer.from_pretrained(args.model_path, trust_remote_code=True)
+    model = AutoModelForSequenceClassification.from_pretrained(
+        args.model_path,
+        trust_remote_code=True,
+        device_map="auto",
+        torch_dtype={{ torch_dtype | default('"auto"') }},
+    )
+
+    with open(args.input_file) as f:
+        test_data = json.load(f)
+
+    results = []
+    for i, item in enumerate(test_data):
+        {% if special_handling %}
+        {{ special_handling }}
+        {% endif %}
+        inputs = tokenizer(
+            item["query"], item["passage"],
+            return_tensors="pt", padding=True, truncation=True, max_length=args.max_length
+        ).to(model.device)
+        with torch.no_grad():
+            output = model(**inputs)
+        score = output.logits.squeeze().item()
+        print(f"Sample {i}: query = {item['query']}")
+        print(f"  passage = {item['passage'][:80]}...")
+        print(f"  score = {score:.4f}")
+        results.append({"index": i, "query": item["query"], "score": score})
+
+    if args.output_file:
+        with open(args.output_file, "w") as f:
+            json.dump(results, f, indent=2, ensure_ascii=False)
+        print(f"\nResults saved to {args.output_file}")
+
+
+if __name__ == "__main__":
+    main()

@@ -8,10 +8,10 @@ execution:
 model:
   name: thaonguyen217/farm_molecular_representation
   local_path: ''
-  container_path: /mnt/workspace/models/farm_molecular_representation
+  container_path: /data/models/farm_molecular_representation
   tokenizer_path: ''
 container:
-  name: farm_molecular_representation_offline_infer_0525_1013
+  name: farm_molecular_representation_offline_infer
   status: running
 image:
   name: harbor.baai.ac.cn/flagos-inner-models-release/flagrelease-farm-nvidia-tree_none-gems_none-vllm_none-plugin_none-python_3.12.3-torch_2.12.0.nv26.4-pcp_cuda13.2-gpu_nvidia003-arc_amd64-driver_570.133.20:202605201429
@@ -33,26 +33,27 @@ env_exploration:
   key_dependencies: []
   inference_entrypoint: transformers
 native_inference:
-  test_data_source: ''
-  test_data_path: ''
-  inference_cmd: ''
-  success: false
-  output_path: ''
+  test_data_source: official_readme
+  test_data_path: /root/test_input.txt
+  inference_cmd: python3 /root/run_inference.py
+  success: true
+  output_path: /root/output_embeddings.json
   error_log: ''
   troubleshoot_attempts: 0
   failure_reason: ''
 flaggems_inference:
-  flaggems_version: ''
-  flagtree_version: ''
-  inference_cmd: ''
-  success: false
-  output_path: ''
+  flaggems_version: 5.0.2
+  flagtree_version: 0.5.0rc1
+  inference_cmd: python3 /root/run_inference.py
+  success: true
+  output_path: /root/output_embeddings_flaggems.json
   error_log: ''
+  readme_path: /root/README.md
 workflow:
-  native_inference_ok: false
-  native_released: false
-  flaggems_installed: false
-  flaggems_inference_ok: false
+  native_inference_ok: true
+  native_released: true
+  flaggems_installed: true
+  flaggems_inference_ok: true
   flaggems_released: false
   all_done: false
   terminated: false
@@ -63,37 +64,37 @@ workflow_ledger:
     name: 容器准备
     status: success
     started_at: ''
-    finished_at: '2026-05-25T02:13:33'
+    finished_at: '2026-05-26T08:57:08'
     fail_reason: ''
   - step: 02_env_exploration
     name: 环境探索
     status: success
     started_at: ''
-    finished_at: '2026-05-25T02:14:34'
+    finished_at: '2026-05-26T08:58:04'
     fail_reason: ''
   - step: 03_native_inference
     name: 原生推理验证
-    status: pending
+    status: success
     started_at: ''
-    finished_at: ''
+    finished_at: '2026-05-26T07:20:17'
     fail_reason: ''
   - step: 04_native_release
     name: 原生镜像发布
-    status: pending
+    status: success
     started_at: ''
-    finished_at: ''
+    finished_at: '2026-05-26T07:23:06'
     fail_reason: ''
   - step: 05_flaggems_install
     name: FlagGems/FlagTree 安装
-    status: pending
+    status: success
     started_at: ''
-    finished_at: ''
+    finished_at: '2026-05-26T07:26:25'
     fail_reason: ''
   - step: 06_flaggems_inference
     name: FlagGems 推理验证
-    status: pending
+    status: success
     started_at: ''
-    finished_at: ''
+    finished_at: '2026-05-26T07:33:12'
     fail_reason: ''
   - step: 07_flaggems_release
     name: FlagGems 镜像发布
@@ -103,11 +104,25 @@ workflow_ledger:
     fail_reason: ''
 release:
   native:
-    image_url: ''
-    readme_path: ''
+    image_url: harbor.baai.ac.cn/flagrelease-public/flagrelease-nvidia-release-model_farm-molecular-representation-tree_none-gems_none-cx_none-python_3.12.3-torch_cuda-2.12.0-pcp_cuda13.2-gpu_nvidia003-arc_amd64-driver_570.133.20:202605261522
+    readme_path: /root/README.md
   flaggems:
     image_url: ''
     readme_path: ''
 metadata:
   created_by: ''
-  updated_at: '2026-05-25T02:14:34'
+  updated_at: '2026-05-26T08:58:04'
+component_install:
+  component: flaggems
+  action: install
+  success: true
+  current_version: 5.0.2
+  install_method: pip
+flagtree:
+  installed: true
+  version: 0.5.0rc1+3.5
+  triton_version: 3.5.1
+  install_method: pip
+  backend: nvidia
+environment:
+  has_flagtree: true

@@ -87,22 +87,30 @@ if [ -f "${PROJECT_ROOT}/skills/flagos-container-preparation/tools/download_mode
         "${CONTAINER}:/Offline_inference_workspace/scripts/download_model.py" 2>/dev/null || true
 fi
 
-# 预装模型下载依赖
-echo "  安装模型下载依赖..."
+# 配置全局 pip 镜像源（加速容器内所有 pip install）
+echo "  配置 pip 镜像源..."
+docker exec "${CONTAINER}" bash -c "
+    mkdir -p /root/.config/pip
+    cat > /root/.config/pip/pip.conf <<'PIPEOF'
+[global]
+index-url = https://mirrors.aliyun.com/pypi/simple/
+trusted-host = mirrors.aliyun.com
+timeout = 120
+PIPEOF
+"
+echo "  ✓ pip 镜像源已配置 (mirrors.aliyun.com)"
+
+# 预装模型下载依赖 + 脚本运行时依赖
+echo "  安装依赖..."
 DEP_OUTPUT=$(docker exec "${CONTAINER}" bash -c "
     PATH=/opt/conda/bin:\$PATH
-    pip install modelscope huggingface_hub \
-        -i https://mirrors.aliyun.com/pypi/simple/ \
-        --trusted-host mirrors.aliyun.com \
-        -q 2>&1 || \
-    pip install modelscope huggingface_hub -q 2>&1 || \
+    pip install modelscope huggingface_hub sqlalchemy -q 2>&1 || \
     echo 'INSTALL_FAILED'
 " 2>&1)
 if echo "$DEP_OUTPUT" | grep -q "INSTALL_FAILED"; then
-    echo "  ⚠ 模型下载依赖安装失败（modelscope/huggingface_hub），容器内下载可能不可用"
-    echo "    详情: $(echo "$DEP_OUTPUT" | tail -3)"
+    echo "  ⚠ 依赖安装失败，详情: $(echo "$DEP_OUTPUT" | tail -3)"
 else
-    echo "  ✓ 依赖安装完成"
+    echo "  ✓ 依赖安装完成 (modelscope, huggingface_hub, sqlalchemy)"
 fi
 
 # 写入挂载模式标记

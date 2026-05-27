@@ -1,41 +1,28 @@
-# Offline_inference
+# Offline Inference Workflow
 
-离线推理自动化框架，基于 FlagOS 生态，支持模型组件安装和镜像发布。
+离线推理验证 workflow 自动化框架，基于状态机驱动 Claude 执行各阶段任务。
 
 ## 项目结构
 
 ```
-├── .claude/
-│   └── settings.local.json         # Claude Code 权限配置
-├── .github/
-│   └── workflows/                  # CI/CD 工作流（待扩展）
-├── assets/                         # 项目资源（logo 等）
-├── docs/                           # 项目文档
-│   └── assets/                     # 文档图片资源
-├── examples/                       # 示例文件
-├── output/                         # 输出目录
-├── prompts/                        # 流水线启动脚本（待扩展）
-├── skills/                         # Skill 定义和工具脚本
+├── workflow/                       # 核心 workflow 代码
+│   ├── cli.py                      # CLI 入口
+│   ├── state.py                    # 状态定义
+│   ├── runner.py                   # 状态机 runner
+│   ├── nodes/                      # 确定性节点（node graph 模式）
+│   └── steps/                      # Claude 步骤（step 模式）
+├── skills/                         # Skill 定义和工具脚本（被 workflow 调用）
 │   ├── flagos-release/             # 镜像打包发布 + 模型权重上传
-│   │   ├── SKILL.md
-│   │   └── tools/
-│   │       ├── main.py             # 流水线主入口
-│   │       ├── requirements.txt
-│   │       ├── src/                # 核心模块（配置、芯片检测、发布阶段）
-│   │       └── templates/          # README 模板
 │   ├── flagos-component-install/   # FlagOS 生态组件安装/升级
-│   │   ├── SKILL.md
-│   │   └── tools/
-│   │       ├── install_component.py
-│   │       └── install_flagtree.sh
+│   ├── flagos-container-preparation/
+│   ├── flagos-env-exploration/
+│   ├── flagos-inference-verify/
 │   └── shared/                     # skills 间共享资源
-├── shared/                         # 共享工具（扩展用）
-├── tools/                          # 顶层工具脚本（待扩展）
+├── tools/                          # 辅助工具脚本
+├── tests/                          # 测试代码
+├── docs/                           # 文档
 ├── CLAUDE.md                       # Claude Code 项目指令
 ├── LICENSE                         # Apache 2.0
-├── MAINTAINERS.md                  # 维护者列表
-├── README.md                       # 本文件
-├── README_cn.md                    # 中文文档
 └── settings.local.json             # 权限预配置
 ```
 

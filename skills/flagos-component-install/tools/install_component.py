@@ -80,7 +80,7 @@ def get_current_version(component):
     return None
 
 
-def install_flaggems(version=None, proxy=None):
+def install_flaggems(version=None, proxy=None, pip_index=None):
     """FlagGems 安装（pip install 最新版或指定版本）"""
     pkg_name = PACKAGE_NAMES["flaggems"]
     old_version = get_current_version("flaggems")
@@ -95,7 +95,11 @@ def install_flaggems(version=None, proxy=None):
     else:
         cmd = f"pip install {pkg_name}"
 
-    code, out, err = run_cmd(cmd, timeout=300, env=env)
+    if pip_index:
+        host = pip_index.split("//")[-1].split("/")[0]
+        cmd += f" -i {pip_index} --trusted-host {host}"
+
+    code, out, err = run_cmd(cmd, timeout=600, env=env)
 
     result = {
         "component": "flaggems",
@@ -114,7 +118,7 @@ def install_flaggems(version=None, proxy=None):
     return result
 
 
-def upgrade_flaggems(proxy=None):
+def upgrade_flaggems(proxy=None, pip_index=None):
     """FlagGems 升级到最新版"""
     pkg_name = PACKAGE_NAMES["flaggems"]
     old_version = get_current_version("flaggems")
@@ -125,7 +129,11 @@ def upgrade_flaggems(proxy=None):
         env["https_proxy"] = proxy
 
     cmd = f"pip install --upgrade {pkg_name}"
-    code, out, err = run_cmd(cmd, timeout=300, env=env)
+    if pip_index:
+        host = pip_index.split("//")[-1].split("/")[0]
+        cmd += f" -i {pip_index} --trusted-host {host}"
+
+    code, out, err = run_cmd(cmd, timeout=600, env=env)
 
     result = {
         "component": "flaggems",
@@ -239,6 +247,7 @@ def main():
                         help="操作类型")
     parser.add_argument("--version", help="指定版本（如 4.2.1rc0）")
     parser.add_argument("--proxy", help="代理地址")
+    parser.add_argument("--pip-index", help="pip 镜像源 URL（如 https://mirrors.aliyun.com/pypi/simple/）")
     parser.add_argument("--vendor", help="FlagTree 后端（如 nvidia, ascend）")
     parser.add_argument("--source", action="store_true", help="FlagTree 源码编译")
     parser.add_argument("--branch", help="FlagTree Git 分支")
@@ -278,9 +287,9 @@ def main():
         }
     elif args.component == "flaggems":
         if args.action == "upgrade":
-            result = upgrade_flaggems(proxy=args.proxy)
+            result = upgrade_flaggems(proxy=args.proxy, pip_index=args.pip_index)
         else:
-            result = install_flaggems(version=args.version, proxy=args.proxy)
+            result = install_flaggems(version=args.version, proxy=args.proxy, pip_index=args.pip_index)
     else:
         result = {
             "component": args.component,

@@ -1,0 +1,55 @@
+"""Custom script wrapper — delegates to model's own inference script."""
+
+try:
+    import flag_gems
+    flag_gems.enable(record=True, once=True, unused=[], path="/root/gems.txt")
+except ImportError:
+    pass
+
+import argparse
+import subprocess
+import sys
+
+{% for imp in extra_imports %}
+{{ imp }}
+{% endfor %}
+
+def parse_args():
+    parser = argparse.ArgumentParser(description="Custom script inference wrapper")
+    parser.add_argument("--script_path", type=str, default="{{ custom_script_path | default('') }}")
+    parser.add_argument("--model_path", type=str, default="{{ model_path }}")
+    parser.add_argument("--input_file", type=str, default="{{ input_file }}")
+    parser.add_argument("--output_file", type=str, default="{{ output_file }}")
+    return parser.parse_args()
+
+
+def main():
+    args = parse_args()
+
+    {% if special_handling %}
+    {{ special_handling }}
+    {% endif %}
+
+    cmd = [sys.executable, args.script_path]
+    {% if script_args %}
+    cmd.extend({{ script_args }})
+    {% else %}
+    cmd.extend(["--model_path", args.model_path])
+    {% endif %}
+
+    print(f"Executing custom script: {' '.join(cmd)}")
+    result = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
+
+    print(result.stdout)
+    if result.stderr:
+        print(result.stderr, file=sys.stderr)
+
+    if args.output_file and result.stdout:
+        with open(args.output_file, "w") as f:
+            f.write(result.stdout)
+
+    sys.exit(result.returncode)
+
+
+if __name__ == "__main__":
+    main()

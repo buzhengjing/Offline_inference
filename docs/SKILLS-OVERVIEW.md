@@ -3,25 +3,29 @@
 ## 流水线架构
 
 ```
-run_inference_pipeline.sh (Shell 入口)
+workflow/cli.py (Python 入口)
     │
-    ├── 段1: claude -p (步骤 1→2)
+    ├── preflight: 模型下载 + 预检
+    │
+    ├── 段1: seg1_container_env (Claude 步骤)
     │     ├── 步骤1: container-preparation  容器准备
     │     └── 步骤2: env-exploration        环境探索
     │
-    ├── [段间检查: container.name 非空 & running]
+    ├── seg1_validate: 验证容器就绪
     │
-    ├── 段2: claude -p (步骤 3→4)
+    ├── 段2: seg2_native_inference (Claude 步骤)
     │     ├── 步骤3: inference-verify       原生推理验证（编写脚本+验证+README）
     │     │     └── 失败 → 排查修复 → 仍失败则终止
     │     └── 步骤4: release                原生镜像发布（/root/ 产出随镜像打包）
     │
-    ├── [段间检查: workflow.native_inference_ok == true]
+    ├── seg2_validate: 验证原生推理通过
     │
-    └── 段3: claude -p (步骤 5→6→7)
-          ├── 步骤5: component-install      FlagGems + FlagTree 安装
-          ├── 步骤6: inference-verify       FlagGems 推理验证（复用脚本+更新README）
-          └── 步骤7: release                FlagGems 镜像发布（/root/ 产出随镜像打包）
+    ├── 段3: seg3_flaggems (Claude 步骤)
+    │     ├── 步骤5: component-install      FlagGems + FlagTree 安装
+    │     ├── 步骤6: inference-verify       FlagGems 推理验证（复用脚本+更新README）
+    │     └── 步骤7: release                FlagGems 镜像发布（/root/ 产出随镜像打包）
+    │
+    └── seg3_validate: 验证 FlagGems 完成
 ```
 
 ## Skills 清单
@@ -62,5 +66,5 @@ run_inference_pipeline.sh (Shell 入口)
 ## 启动方式
 
 ```bash
-bash prompts/run_inference_pipeline.sh <镜像地址或容器名> <模型名> <HARBOR_USER> <HARBOR_PASSWORD> [--model-path <路径>] [--verbose]
+python -m workflow.cli <镜像地址或容器名> <模型名> <HARBOR_USER> <HARBOR_PASSWORD> [--model-path <路径>] [--verbose]
 ```
